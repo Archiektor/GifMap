@@ -4,4 +4,6 @@
     <string name="title">title</string>
     <string name="gifPic">picture of cat</string>
     <string name="indicator">indicator</string>
+    <string name="title_activity_second">Contact #</string>
+    <string name="toolbar_title">123</string>
 </resources>

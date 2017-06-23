@@ -17,16 +17,10 @@ import java.util.List;
 public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        // Your holder should contain a member variable
-        // for any view that will be set as you render a row
         public TextView idTV;
         public TextView titleTV;
 
-        // We also create a constructor that accepts the entire item row
-        // and does the view lookups to find each subview
         public ViewHolder(View itemView) {
-            // Stores the itemView in a public final member variable that can be used
-            // to access the context from any ViewHolder instance.
             super(itemView);
 
             idTV = (TextView) itemView.findViewById(R.id.id);
@@ -46,14 +40,23 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         return mContext;
     }
 
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        //items of row
+        int numberOfRows = 2;
+
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
         View contactView = inflater.inflate(R.layout.item_row, parent, false);
         //View contactView = inflater.inflate(R.layout.card_item_row, parent, false);
+
+        int height = parent.getHeight() / numberOfRows;
+        int width = parent.getWidth() / 3;
+
+        //contactView.setLayoutParams(new RecyclerView.LayoutParams(width, height));
 
         // Return a new holder instance
         ViewHolder viewHolder = new ViewHolder(contactView);

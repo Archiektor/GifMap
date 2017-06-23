@@ -5,4 +5,11 @@
     <color name="colorAccent">#FF4081</color>
     <color name="label_color">#050505</color>
     <color name="value_color">#4a80a9</color>
+    <color name="cursorAccent">#4ba636</color>
+    <color name="controlNormal">#d5e68b</color>
+    <color name="controlActivated">#56ce88</color>
+    <color name="toolbar_color">#7e5d23</color>
+    <color name="holo_blue_light">#76c2d1</color>
+    <color name="holo_green_light">#4ccf3e</color>
+    <color name="userName">#d92010</color>
 </resources>
