@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -37,10 +38,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import static com.example.archiektor.testtasksoftteco.R.attr.layoutManager;
+
 public class MainActivity extends Activity {
 
     private ImageButton button;
-    private GifView gifView;
+    //private GifView gifView;
     private List<Items> mItems;
 
     private List<Items> inetItems;
@@ -56,10 +59,9 @@ public class MainActivity extends Activity {
     private static final String ENDPOINT = "http://jsonplaceholder.typicode.com/posts";
     private RequestQueue requestQueue;
 
-    //final CountDownLatch countDownLatch = new CountDownLatch(1);
-    //final Object[] responseHolder = new Object[1];
-
     private Gson gson;
+
+    private int reviewPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,21 +78,12 @@ public class MainActivity extends Activity {
         fetchPosts();
 
         button = (ImageButton) findViewById(R.id.imageLogcat);
-        gifView = (GifView) findViewById(R.id.gifView);
-        gifView = new GifView(this);
+        //gifView = (GifView) findViewById(R.id.gifView);
+        //gifView = new GifView(this);
         textView = (TextView) findViewById(R.id.indicator);
 
+
         final RecyclerView rvItems = (RecyclerView) findViewById(R.id.rvItems);
-
-        //mItems = Items.createList(15);
-
-        /**try {
-         while (ContainsAllNulls(inetItems)) {
-         wait(10000);
-         }
-         } catch (InterruptedException e) {
-         e.printStackTrace();
-         }*/
 
         adapter = new ItemsAdapter(getApplicationContext(), inetItems);
 
@@ -99,10 +92,6 @@ public class MainActivity extends Activity {
 
         final GridLayoutManager layoutManager2 = new GridLayoutManager(this, 2, LinearLayoutManager.HORIZONTAL, false);
         layoutManager2.scrollToPosition(0);
-
-
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-//        layoutManager.scrollToPosition(0);
 
         rvItems.setLayoutManager(layoutManager2);
 
@@ -118,8 +107,8 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view, int position) {
                 //Values are passing to activity & to fragment as well
-                Toast.makeText(MainActivity.this, "Single Click on position: " + (position + 1),
-                        Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Single Click on position: " + (position + 1),
+//                        Toast.LENGTH_SHORT).show();
                 Items intentItem = inetItems.get(position);
                 int userId = Integer.parseInt(intentItem.getUserId());
                 int id = Integer.parseInt(intentItem.getId());
@@ -133,8 +122,8 @@ public class MainActivity extends Activity {
 
             @Override
             public void onLongClick(View view, int position) {
-                Toast.makeText(MainActivity.this, "Long press on position: " + position,
-                        Toast.LENGTH_LONG).show();
+//                Toast.makeText(MainActivity.this, "Long press on position: " + position,
+//                        Toast.LENGTH_LONG).show();
             }
         }));
 
@@ -142,22 +131,39 @@ public class MainActivity extends Activity {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                //int firstVisibleItemPosition = ((GridLayoutManager) (rvItems.getLayoutManager())).findFirstVisibleItemPosition();
-                //textView.setText(String.valueOf(firstVisibleItemPosition + " 1. OnSSC"));
+
+//                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+//                    //Dragging
+//                } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+//                    reviewPosition = ((GridLayoutManager) (rvItems.getLayoutManager())).findFirstVisibleItemPosition();
+
+
             }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-//                overallXScroll = overallXScroll + dx;
-//                String coord = String.valueOf(overallXScroll);
-//                textView.setText(coord);
+                int offset = recyclerView.computeHorizontalScrollOffset();
+                /**int extent = recyclerView.computeHorizontalScrollExtent();
+                 int range = recyclerView.computeHorizontalScrollRange();
 
+                 int percentage = (int)(100.0 * offset / (float)(range - extent));*/
 
-                int firstVisibleItemPosition = ((GridLayoutManager) (rvItems.getLayoutManager())).findFirstVisibleItemPosition();
+                int currentPosition = ((GridLayoutManager) (rvItems.getLayoutManager())).findFirstVisibleItemPosition();
 
-                textView.setText(String.valueOf(firstVisibleItemPosition + 1));
+                int modifiedPosition = currentPosition + 6;
+                int previousPosition = modifiedPosition - 1;
+
+                if ((currentPosition == 0) && (offset == 0)) {
+                    textView.setText("3/4");
+                } else if ((offset > 0) && (currentPosition == 0)) {
+                    textView.setText("5/6");
+                } else {
+                    textView.setText(String.valueOf((previousPosition) + "/" + (modifiedPosition)));
+                }
+
+                //textView.setText(String.valueOf((currentPosition) + "/" + (offset)));
             }
         });
     }
@@ -291,8 +297,6 @@ public class MainActivity extends Activity {
         public void onErrorResponse(VolleyError error) {
             Log.e("PostActivity", error.toString());
 
-            /** responseHolder[0] = error;
-             countDownLatch.countDown();*/
         }
     };
 
