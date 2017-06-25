@@ -6,12 +6,19 @@
         android:fromYScale="1.0"
         android:pivotX="50%"
         android:pivotY="50%"
-        android:toXScale="0.8"
-        android:toYScale="0.8"></scale>
+        android:toXScale="0.5"
+        android:toYScale="0.5">
+    </scale>
     <rotate
         android:duration="3000"
         android:fromDegrees="0"
         android:pivotX="50%"
         android:pivotY="50%"
-        android:toDegrees="360"></rotate>
+        android:toDegrees="360">
+    </rotate>
+    <alpha
+        android:duration="3000"
+        android:fromAlpha="1.0"
+        android:toAlpha="0.2">
+    </alpha>
 </set>

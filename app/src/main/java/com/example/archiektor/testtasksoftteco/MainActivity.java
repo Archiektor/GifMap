@@ -3,7 +3,10 @@ package com.example.archiektor.testtasksoftteco;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
+import android.media.Image;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
@@ -11,10 +14,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +40,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,6 +58,8 @@ public class MainActivity extends Activity {
 
     private ImageButton button;
     //private GifView gifView;
+    private Animation animation;
+    private ImageView imageView;
     private List<Items> mItems;
 
     private List<Items> inetItems;
@@ -61,7 +77,6 @@ public class MainActivity extends Activity {
 
     private Gson gson;
 
-    private int reviewPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +93,41 @@ public class MainActivity extends Activity {
         fetchPosts();
 
         button = (ImageButton) findViewById(R.id.imageLogcat);
+        button.setVisibility(View.INVISIBLE);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                writeLogCat();
+            }
+        });
+
+        imageView = (ImageView) findViewById(R.id.image);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.combo);
+
+                imageView.startAnimation(animation);
+
+                animation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        button.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+
+            }
+        });
         //gifView = (GifView) findViewById(R.id.gifView);
         //gifView = new GifView(this);
         textView = (TextView) findViewById(R.id.indicator);
@@ -307,5 +357,44 @@ public class MainActivity extends Activity {
         }
 
         return true;
+    }
+
+    protected void writeLogCat() {
+        try {
+            Process process = Runtime.getRuntime().exec("logcat -d");
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            StringBuilder log = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                log.append(line);
+                log.append("\n");
+            }
+
+            //Convert log to string
+            final String logString = new String(log.toString());
+
+            //Create txt file in SD Card
+            File sdCard = Environment.getExternalStorageDirectory();
+            File dir = new File(sdCard.getAbsolutePath() + File.separator + "Log File");
+
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            File file = new File(dir, "logcat.txt");
+
+            //To write logcat in text file
+            FileOutputStream fout = new FileOutputStream(file);
+            OutputStreamWriter osw = new OutputStreamWriter(fout);
+
+            //Writing the string to file
+            osw.write(logString);
+            osw.flush();
+            osw.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -9,42 +9,46 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_gravity="end"
-        android:layout_weight=".4"
-        android:gravity="end"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:paddingTop="4dp"
+        android:layout_weight="3.0"
+        android:gravity="center_horizontal"
         tools:context="com.example.archiektor.testtasksoftteco.MainActivity">
 
-        <ImageButton
-            android:id="@+id/imageLogcat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            android:contentDescription="@string/gifPic"
-            android:src="@android:drawable/ic_menu_save" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_margin="3dp">
+
+            <ImageView
+                android:id="@+id/image"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:src="@drawable/puppy" />
+
+            <ImageButton
+                android:id="@+id/imageLogcat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:contentDescription="@string/gifPic"
+                android:gravity="end"
+                android:src="@android:drawable/ic_menu_save" />
+
+
+        </FrameLayout>
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2.6"
-        android:gravity="center">
-
-        <com.example.archiektor.testtasksoftteco.GifView
-            android:id="@+id/gifView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="12dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.8">
+        android:layout_weight="1.4">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvItems"
@@ -52,27 +56,26 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="2dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gifView"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/gifView" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".4"
+        android:layout_weight=".3"
         android:gravity="center">
 
         <TextView
             android:id="@+id/indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginBottom="12dp"
-            android:textSize="15sp"
+            android:layout_marginTop="2dp"
             android:text="TextView"
+            android:textSize="15sp"
             tools:ignore="HardcodedText" />
     </LinearLayout>
 
