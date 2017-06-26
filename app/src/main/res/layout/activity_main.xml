@@ -9,11 +9,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:paddingStart="4dp"
-        android:paddingEnd="4dp"
-        android:paddingTop="4dp"
         android:layout_weight="3.0"
         android:gravity="center_horizontal"
+        android:paddingEnd="4dp"
+        android:paddingStart="4dp"
+        android:paddingTop="4dp"
         tools:context="com.example.archiektor.testtasksoftteco.MainActivity">
 
         <FrameLayout
@@ -24,11 +24,12 @@
 
             <ImageView
                 android:id="@+id/image"
-                android:adjustViewBounds="true"
-                android:scaleType="fitXY"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:adjustViewBounds="true"
                 android:clickable="true"
+                android:contentDescription="@string/imageDescription"
+                android:scaleType="fitXY"
                 android:src="@drawable/puppy" />
 
             <ImageButton
@@ -65,18 +66,38 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".3"
-        android:gravity="center">
+        android:layout_weight=".4"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <com.example.archiektor.testtasksoftteco.CircleLeftArrow
+            android:id="@+id/leftIndicator"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="2dp" />
 
         <TextView
             android:id="@+id/indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/rounded_textview"
+            android:gravity="center"
             android:text="TextView"
-            android:textSize="15sp"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
             tools:ignore="HardcodedText" />
+
+        <com.example.archiektor.testtasksoftteco.CircleRightArrow
+            android:id="@+id/rightIndicator"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="2dp" />
+
+
     </LinearLayout>
 
 

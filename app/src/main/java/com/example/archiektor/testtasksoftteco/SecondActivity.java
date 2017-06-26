@@ -1,13 +1,10 @@
 package com.example.archiektor.testtasksoftteco;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.renderscript.Double2;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
@@ -17,7 +14,6 @@ import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
@@ -39,9 +35,6 @@ public class SecondActivity extends AppCompatActivity {
     private int userId;
     private int id;
 
-    private TextView toolbarTitle;
-    private TextView idPost;
-
     private TextView userName;
     private TextView nickName;
 
@@ -49,8 +42,6 @@ public class SecondActivity extends AppCompatActivity {
     private TextView webSite;
     private TextView phone;
     private TextView city;
-
-    private ImageButton btnSave;
 
     RequestQueue queue;
     String url = "http://jsonplaceholder.typicode.com/posts";
@@ -80,10 +71,10 @@ public class SecondActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
         toolbarTitle.setText("Contact # " + userId);
 
-        idPost = (TextView) findViewById(R.id.idPost);
+        TextView idPost = (TextView) findViewById(R.id.idPost);
         idPost.setText(String.valueOf(id));
 
         userName = (TextView) findViewById(R.id.userName);
@@ -94,7 +85,7 @@ public class SecondActivity extends AppCompatActivity {
         phone = (TextView) findViewById(R.id.phone);
         city = (TextView) findViewById(R.id.userCity);
 
-        btnSave = (ImageButton) findViewById(R.id.btnSave);
+        ImageButton btnSave = (ImageButton) findViewById(R.id.btnSave);
 
         queue = Volley.newRequestQueue(this);
         url = "http://jsonplaceholder.typicode.com/users/" + userId;
@@ -130,13 +121,13 @@ public class SecondActivity extends AppCompatActivity {
 
                             phoneStr = response.getString("phone");
                             phone.setText("phone: " + phoneStr);
-                            int phoneStrLength = new String("phone: " + phoneStr).length();
+                            int phoneStrLength = ("phone: " + phoneStr).length();
                             Intent intentCall = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneStr));
                             setClicable(("phone: " + phoneStr), 7, phoneStrLength, intentCall, phone);
 
                             websiteStr = response.getString("website");
                             webSite.setText("website: " + websiteStr);
-                            int webStrLength = new String("website: " + websiteStr).length();
+                            int webStrLength = ("website: " + websiteStr).length();
                             Intent intentWeb = new Intent(Intent.ACTION_VIEW, Uri.parse("http://" + websiteStr));
                             setClicable(("website: " + websiteStr), 7, webStrLength, intentWeb, webSite);
 
@@ -150,7 +141,7 @@ public class SecondActivity extends AppCompatActivity {
                             Double lngStr = Double.parseDouble(geo.getString("lng"));
                             Log.i("lngStr = ", String.valueOf(lngStr));
 
-                            int geoStrString = new String("city: " + cityStr).length();
+                            int geoStrString = ("city: " + cityStr).length();
                             Intent intentMap = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + latStr + "," + lngStr + "?z=17"));
                             intentMap.setPackage("com.google.android.apps.maps");
                             setClicable(("city: " + cityStr), 6, geoStrString, intentMap, city);

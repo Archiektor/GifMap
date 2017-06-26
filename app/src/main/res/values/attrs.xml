@@ -3,4 +3,10 @@
     <declare-styleable name="GIFView">
         <attr name="src" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="PageIndicatorView">
+
+        <attr name="piv_count" format="integer" />
+
+    </declare-styleable>
 </resources>

@@ -3,8 +3,8 @@ package com.example.archiektor.testtasksoftteco;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
-import android.media.Image;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.widget.GridLayoutManager;
@@ -12,9 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,14 +23,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.flexbox.FlexboxLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -48,34 +43,24 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-
-import static com.example.archiektor.testtasksoftteco.R.attr.layoutManager;
 
 public class MainActivity extends Activity {
 
     private ImageButton button;
-    //private GifView gifView;
     private Animation animation;
     private ImageView imageView;
-    private List<Items> mItems;
-
-    private List<Items> inetItems;
-
     private TextView textView;
 
-    private int overallXScroll = 0;
-
-    private RecyclerView rvItems;
+    private List<Items> inetItems;
 
     private ItemsAdapter adapter;
 
     private static final String ENDPOINT = "http://jsonplaceholder.typicode.com/posts";
     private RequestQueue requestQueue;
 
-    private Gson gson;
+    private CircleLeftArrow leftIndicator;
+    private CircleRightArrow rightIndicator;
 
 
     @Override
@@ -88,7 +73,7 @@ public class MainActivity extends Activity {
         requestQueue = Volley.newRequestQueue(this);
 
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gson = gsonBuilder.create();
+        Gson gson = gsonBuilder.create();
 
         fetchPosts();
 
@@ -112,7 +97,6 @@ public class MainActivity extends Activity {
                 animation.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
-
                     }
 
                     @Override
@@ -122,16 +106,16 @@ public class MainActivity extends Activity {
 
                     @Override
                     public void onAnimationRepeat(Animation animation) {
-
                     }
                 });
 
             }
         });
-        //gifView = (GifView) findViewById(R.id.gifView);
-        //gifView = new GifView(this);
+
         textView = (TextView) findViewById(R.id.indicator);
 
+        leftIndicator = (CircleLeftArrow) findViewById(R.id.leftIndicator);
+        rightIndicator = (CircleRightArrow) findViewById(R.id.rightIndicator);
 
         final RecyclerView rvItems = (RecyclerView) findViewById(R.id.rvItems);
 
@@ -156,9 +140,6 @@ public class MainActivity extends Activity {
         rvItems.addOnItemTouchListener(new RecyclerTouchListener(this, rvItems, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                //Values are passing to activity & to fragment as well
-//                Toast.makeText(MainActivity.this, "Single Click on position: " + (position + 1),
-//                        Toast.LENGTH_SHORT).show();
                 Items intentItem = inetItems.get(position);
                 int userId = Integer.parseInt(intentItem.getUserId());
                 int id = Integer.parseInt(intentItem.getId());
@@ -166,14 +147,19 @@ public class MainActivity extends Activity {
                 Intent intent = new Intent(MainActivity.this, SecondActivity.class);
                 intent.putExtra("userId", userId);
                 intent.putExtra("id", id);
-                startActivity(intent);
 
+                if (isOnline()) {
+                    startActivity(intent);
+                } else {
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "Check Your Internet Connection", Toast.LENGTH_LONG);
+                    toast.show();
+                }
             }
 
             @Override
             public void onLongClick(View view, int position) {
-//                Toast.makeText(MainActivity.this, "Long press on position: " + position,
-//                        Toast.LENGTH_LONG).show();
+
             }
         }));
 
@@ -181,13 +167,6 @@ public class MainActivity extends Activity {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-
-//                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-//                    //Dragging
-//                } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-//                    reviewPosition = ((GridLayoutManager) (rvItems.getLayoutManager())).findFirstVisibleItemPosition();
-
-
             }
 
             @Override
@@ -195,15 +174,24 @@ public class MainActivity extends Activity {
                 super.onScrolled(recyclerView, dx, dy);
 
                 int offset = recyclerView.computeHorizontalScrollOffset();
-                /**int extent = recyclerView.computeHorizontalScrollExtent();
-                 int range = recyclerView.computeHorizontalScrollRange();
-
-                 int percentage = (int)(100.0 * offset / (float)(range - extent));*/
 
                 int currentPosition = ((GridLayoutManager) (rvItems.getLayoutManager())).findFirstVisibleItemPosition();
 
                 int modifiedPosition = currentPosition + 6;
                 int previousPosition = modifiedPosition - 1;
+
+                if (offset == 0) {
+                    leftIndicator.setCustomColor(0xffdadada);
+                } else {
+                    leftIndicator.setCustomColor(0xffacff2f);
+                }
+
+                if (modifiedPosition >= 97) {
+                    rightIndicator.setCustomColor(0xffdadada);
+                } else {
+                    rightIndicator.setCustomColor(0xffacff2f);
+                }
+
 
                 if ((currentPosition == 0) && (offset == 0)) {
                     textView.setText("3/4");
@@ -212,18 +200,16 @@ public class MainActivity extends Activity {
                 } else {
                     textView.setText(String.valueOf((previousPosition) + "/" + (modifiedPosition)));
                 }
-
-                //textView.setText(String.valueOf((currentPosition) + "/" + (offset)));
             }
         });
     }
 
-    class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
+    private class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
 
         private ClickListener clicklistener;
         private GestureDetector gestureDetector;
 
-        public RecyclerTouchListener(Context context, final RecyclerView recycleView, final ClickListener clicklistener) {
+        RecyclerTouchListener(Context context, final RecyclerView recycleView, final ClickListener clicklistener) {
 
             this.clicklistener = clicklistener;
             gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
@@ -299,65 +285,8 @@ public class MainActivity extends Activity {
         });
 
         requestQueue.add(jsonArrayRequest);
-
-        /**StringRequest request = new StringRequest(Request.Method.GET, ENDPOINT, onPostsLoaded, onPostsError);
-
-         Log.i("Fetch method", "in fetch method");
-         requestQueue.add(request);*/
-
-        /**try {
-         countDownLatch.await();
-         } catch (InterruptedException e) {
-         throw new RuntimeException(e);
-         }
-         if (responseHolder[0] instanceof VolleyError) {
-         final VolleyError volleyError = (VolleyError) responseHolder[0];
-         //TODO: Handle error...
-         } else {
-         final String response = (String) responseHolder[0];
-         //TODO: Handle response...
-         Log.i("After countdown", response);
-         inetItems = Arrays.asList(gson.fromJson(response, Items[].class));
-         }
-         //requestQueue.notifyAll();*/
     }
 
-    private final Response.Listener<String> onPostsLoaded = new Response.Listener<String>() {
-        @Override
-        public void onResponse(String response) {
-
-            Log.i("PostActivity here first", response);
-
-            /**responseHolder[0] = response;
-             countDownLatch.countDown();*/
-
-            inetItems = Arrays.asList(gson.fromJson(response, Items[].class));
-
-            Log.i("PostActivity", inetItems.size() + " items loaded.");
-            for (Items post : inetItems) {
-                Log.i("PostActivity", "userId: " + post.getUserId() + "id: " + post.getId() + "title: " + post.getTitle());
-            }
-
-        }
-    };
-
-
-    private final Response.ErrorListener onPostsError = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.e("PostActivity", error.toString());
-
-        }
-    };
-
-    public static Boolean ContainsAllNulls(List<Items> list) {
-        if (list != null) {
-            for (Items a : list)
-                if (a != null) return false;
-        }
-
-        return true;
-    }
 
     protected void writeLogCat() {
         try {
@@ -371,7 +300,7 @@ public class MainActivity extends Activity {
             }
 
             //Convert log to string
-            final String logString = new String(log.toString());
+            final String logString = log.toString();
 
             //Create txt file in SD Card
             File sdCard = Environment.getExternalStorageDirectory();
@@ -396,5 +325,12 @@ public class MainActivity extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

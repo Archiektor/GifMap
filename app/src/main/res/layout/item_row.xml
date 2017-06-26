@@ -5,25 +5,31 @@
 
     <TextView
         android:id="@+id/id"
-        android:layout_width="88dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingLeft="5dp"
         android:paddingStart="5dp"
-        android:textColor="@color/label_color"
-        android:textSize="24sp"
+        android:text="@string/id"
         android:textAlignment="center"
-        android:text="@string/id"></TextView>
+        android:textColor="@color/label_color"
+        android:textSize="24sp"></TextView>
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/id"
-        android:paddingStart="5dp"
-        android:textColor="@color/value_color"
-        android:textSize="12sp"
-        android:layout_alignStart="@+id/id"
         android:layout_alignEnd="@+id/id"
+        android:layout_alignLeft="@+id/id"
+        android:layout_alignRight="@+id/id"
+        android:layout_alignStart="@+id/id"
+        android:layout_below="@+id/id"
+        android:gravity="center"
+        android:paddingLeft="5dp"
+        android:paddingStart="5dp"
+        android:text="@string/title"
         android:textAlignment="center"
-        android:text="@string/title"></TextView>
+        android:textColor="@color/value_color"
+        android:textSize="12sp"></TextView>
 
 </RelativeLayout>

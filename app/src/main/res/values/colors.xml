@@ -12,4 +12,7 @@
     <color name="holo_blue_light">#76c2d1</color>
     <color name="holo_green_light">#4ccf3e</color>
     <color name="userName">#d92010</color>
+
+    <color name="no_more_indicator">#d92010</color>
+    <color name="have_indicator">#1ad910</color>
 </resources>
